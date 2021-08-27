@@ -9,10 +9,14 @@ app.get('/', (req, res, next) => {
     res.send('Hello API ' + process.env.API_NAME);
 });
 
-app.get('/b/users', (req, res, next) => {
+app.get('/a/users', (req, res, next) => {
     res.send('Users B');
 });
 
-app.listen(8082, () => {
+app.post('/b/register/users', (req, res, next) => {
+    res.send('POST B');
+});
+
+app.listen(8081, () => {
     console.log('Service started on port ' + process.env.PORT);
 });

@@ -6,7 +6,7 @@ networks:
         driver: bridge
 
 services:
-    node:
+    gateway:
         build:
             context: .
             dockerfile: Dockerfile

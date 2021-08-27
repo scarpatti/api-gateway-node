@@ -1,16 +1,1 @@
-{
-    "services": {
-        "servicea": {
-            "apiName": "a",
-            "host": "http://servicea",
-            "port": "8081",
-            "url": "http://servicea:8081/"
-        },
-        "serviceb": {
-            "apiName": "b",
-            "host": "http://serviceb",
-            "port": "8082",
-            "url": "http://serviceb:8082/"
-        }
-    }
-}
+{"services":{"serviceb":{"apiName":"b","host":"http://serviceb","port":"8082","url":"http://serviceb:8082/"},"servicea":{"apiName":"servicea","host":"http://servicea","port":"8081","url":"http://servicea:8081/"}}}

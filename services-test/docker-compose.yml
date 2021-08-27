@@ -8,27 +8,29 @@ networks:
 services:
     servicea:
         build:
-            context: .
-            dockerfile: a.Dockerfile
+            context: ./servicea
+            dockerfile: Dockerfile
         image: node/app
-        command: "npm run deva"
+        command: "npm run dev"
         ports:
             - "8081:8081"
         environment:
-            - API_NAME='A'
-            - PORT=':8081'
-            - CONTENT="<h1>Service A</h1>"
+            - API_NAME="A"
+            - PORT=":8081"
+            - GATEWAY_HOST="http://gateway"
+            - GATEWAY_PORT="3000"
+            - GATEWAY_ROUTE_REGISTER="/register"
         volumes:
-            - './:/usr/app'
+            - './servicea:/usr/app'
         networks:
             - gateway
 
     serviceb:
         build:
-            context: .
-            dockerfile: b.Dockerfile
+            context: ./serviceb
+            dockerfile: Dockerfile
         image: node/app
-        command: "npm run devb"
+        command: "npm run dev"
         ports:
             - "8082:8082"
         environment:
@@ -36,6 +38,6 @@ services:
             - PORT=':8082'
             - CONTENT="<h1>Service B</h1>"
         volumes:
-            - './:/usr/app'
+            - './serviceb:/usr/app'
         networks:
             - gateway
