@@ -20,6 +20,7 @@ services:
             - GATEWAY_HOST="http://gateway"
             - GATEWAY_PORT="3000"
             - GATEWAY_ROUTE_REGISTER="/register"
+            - GATEWAY_ROUTE_GET_API="/getApi"
         volumes:
             - './servicea:/usr/app'
         networks:
@@ -36,7 +37,10 @@ services:
         environment:
             - API_NAME='B'
             - PORT=':8082'
-            - CONTENT="<h1>Service B</h1>"
+            - GATEWAY_HOST="http://gateway"
+            - GATEWAY_PORT="3000"
+            - GATEWAY_ROUTE_REGISTER="/register"
+            - GATEWAY_ROUTE_GET_API="/getApi"
         volumes:
             - './serviceb:/usr/app'
         networks:

@@ -19,22 +19,48 @@ app.post('/a/register/users', (req, res, next) => {
 });
 
 app.listen(8081, () => {
-    console.log('Service started on port ' + process.env.PORT);
+    try {
+        console.log('Service started on port ' + process.env.PORT);
 
-    let urlGateway = process.env.GATEWAY_HOST + ':' + process.env.GATEWAY_PORT + process.env.GATEWAY_ROUTE_REGISTER;
-    urlGateway = urlGateway.replaceAll('"', '');
+        let urlGatewayRegister = process.env.GATEWAY_HOST + ':' + process.env.GATEWAY_PORT + process.env.GATEWAY_ROUTE_REGISTER;
+        urlGatewayRegister = urlGatewayRegister.replaceAll('"', '');
 
-    console.log(urlGateway);
+        let urlGatewayGetApi = process.env.GATEWAY_HOST + ':' + process.env.GATEWAY_PORT + process.env.GATEWAY_ROUTE_GET_API;
+        urlGatewayGetApi = urlGatewayGetApi.replaceAll('"', '');
 
-    axios({
-        method: 'POST',
-        url: urlGateway,
-        headers: { 'Accept': 'application/json'},
-        data: {
-            apiName: hostConfig.API_NAME,
-            host: hostConfig.HOST,
-            port: hostConfig.PORT,
-            url: hostConfig.HOST + ':' + hostConfig.PORT + '/'
-        }
-    });
+        axios({
+            method: 'GET',
+            url: urlGatewayGetApi + '/' + hostConfig.API_NAME,
+            headers: { 'Accept': 'application/json'},
+
+        }).then((response) => {
+
+            if(!response.data.api) {
+                axios({
+                    method: 'POST',
+                    url: urlGatewayRegister,
+                    headers: { 'Accept': 'application/json'},
+                    data: {
+                        apiName: hostConfig.API_NAME,
+                        host: hostConfig.HOST,
+                        port: hostConfig.PORT,
+                        url: hostConfig.HOST + ':' + hostConfig.PORT + '/'
+                    }
+                }).then((response) => {
+                    console.log(response.data);
+
+                }).catch((err) => {
+                    console.log('Error up' + err);
+
+                });
+            }
+
+        }).catch((err) => {
+            console.log('Error up' + err);
+
+        });
+
+    } catch(error) {
+        console.log('Error up' + error);
+    }
 });
