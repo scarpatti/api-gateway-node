@@ -1,0 +1,22 @@
+version: '3'
+
+networks:
+    gateway:
+        external: true
+        driver: bridge
+
+services:
+    node:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: node/app
+        command: "npm run dev"
+        ports:
+            - '${APP_PORT:-3000}:3000'
+            - "9229:9229"
+
+        volumes:
+            - './:/usr/app'
+        networks:
+            - gateway

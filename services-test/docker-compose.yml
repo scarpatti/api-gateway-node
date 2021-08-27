@@ -1,0 +1,41 @@
+version: '3'
+
+networks:
+    gateway:
+        external: true
+        driver: bridge
+
+services:
+    servicea:
+        build:
+            context: .
+            dockerfile: a.Dockerfile
+        image: node/app
+        command: "npm run deva"
+        ports:
+            - "8081:8081"
+        environment:
+            - API_NAME='A'
+            - PORT=':8081'
+            - CONTENT="<h1>Service A</h1>"
+        volumes:
+            - './:/usr/app'
+        networks:
+            - gateway
+
+    serviceb:
+        build:
+            context: .
+            dockerfile: b.Dockerfile
+        image: node/app
+        command: "npm run devb"
+        ports:
+            - "8082:8082"
+        environment:
+            - API_NAME='B'
+            - PORT=':8082'
+            - CONTENT="<h1>Service B</h1>"
+        volumes:
+            - './:/usr/app'
+        networks:
+            - gateway
