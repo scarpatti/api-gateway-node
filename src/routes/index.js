@@ -3,8 +3,26 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const registry = require('./registry.json');
+const { body, validationResult } = require('express-validator');
 
 const router = express.Router();
+
+router.get('/getApi/:apiName', (req, res) => {
+    try {
+        const apiName = req.params.apiName;
+
+        const api = registry.services[apiName];
+
+        if(api)
+            res.send({ api: api });
+        else
+            res.send({ api: false });
+
+    } catch (err) {
+        res.send({ api: false });
+
+    }
+});
 
 // router.all('/:apiName/:path?', (req, res) => {
 router.all('/:apiName/*', (req, res) => {
@@ -32,28 +50,40 @@ router.all('/:apiName/*', (req, res) => {
             });
 
         } else {
-            res.send(404).json('API name not exists!');
+            res.status(404).json('API name not exists!');
 
         }
 
     } catch(error) {
-        res.sendStatus(404);
+        res.status(404);
 
     }
 });
 
-router.post('/register', (req, res) => {
-    const info = req.body;
+router.post('/register',
+    body('apiName').exists(),
+    body('host').exists(),
+    body('port').exists(),
+    body('url').exists(),
+    (req, res) => {
+        const errors = validationResult(req);
 
-    registry.services[info.apiName] = { ...info };
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-    fs.writeFile(path.join(__dirname, 'registry.json'), JSON.stringify(registry), (error) => {
-        if(error)
-            res.send(400).json('Could not register ' + info.apiName + '\n' + error );
-        else
-            res.send(200).json('Successfully registered ' + info.apiName);
+        const info = req.body;
 
-    })
-});
+        registry.services[info.apiName] = { ...info };
+
+        fs.writeFile(path.join(__dirname, 'registry.json'), JSON.stringify(registry), (error) => {
+            if(error)
+                res.status(400).json('Could not register ' + info.apiName + '\n' + error );
+            else
+                res.status(200).json('Successfully registered ' + info.apiName);
+
+        })
+    }
+);
 
 module.exports = router;
