@@ -26,7 +26,11 @@ module.exports = (req, res, next) => {
 
         }).then((response) => {
             console.log(response.data);
-            next();
+
+            if(response.data.active && response.data.token_type === 'access_token')
+                next();
+            else
+                res.sendStatus(401);
 
         }).catch((err) => {
             console.log('Error up' + err);
