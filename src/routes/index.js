@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const registry = require('./registry.json');
 const { body, validationResult } = require('express-validator');
+const authMiddleware = require('../middlewares/authenticated-middleware');
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get('/getApi/:apiName', (req, res) => {
 });
 
 // router.all('/:apiName/:path?', (req, res) => {
-router.all('/:apiName/*', (req, res) => {
+router.all('/:apiName/*', authMiddleware, (req, res) => {
     try {
         console.log(req.params.apiName);
 
